@@ -261,6 +261,7 @@ const playRadio = async message => {
       streamCron = cron.schedule(`${getSeconds(new Date())} * * * * *`, () => {
         getToken(connection, fullMessage[1]);
       });
+      streamCron.start();
     })
   } else {
     message.channel.send(`Station ID '${fullMessage[1]}' doesn't exists in our list of stations...`);
