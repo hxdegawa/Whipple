@@ -1,25 +1,12 @@
 {
   "name": "whipple",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
-    "compile": "babel src/index.js --out-file build/compiled.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "description": "",
-  "devDependencies": {
+  "main": "index.js",
+  "dependencies": {
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "nodemon": "^1.19.1",
-    "prettier": "^1.17.1"
-  },
-  "dependencies": {
-    "babel-cli": "^6.26.3",
     "babel-core": "^7.0.0-bridge.0",
     "clarifai": "^2.9.0",
     "date-fns": "^1.30.1",
@@ -29,7 +16,26 @@
     "m3u8stream": "^0.6.2",
     "node-cron": "^2.0.3",
     "node-opus": "^0.3.2",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.17.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon --exec babel-node src/index.js",
+    "compile": "babel src/index.js --out-file build/compiled.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hxdegawa/Whipple.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hxdegawa/Whipple/issues"
+  },
+  "homepage": "https://github.com/hxdegawa/Whipple#readme"
 }

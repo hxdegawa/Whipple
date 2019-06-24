@@ -61,6 +61,8 @@ client.on("message", message => {
 
   if (firstQuote === ".timer") setTimer(message);
 
+  if (firstQuote === '.study') concentrate(message);
+
   if (firstQuote === ".play")  playRadio(message);
 
   if (firstQuote === ".stop")  stopRadio(message);
@@ -68,7 +70,7 @@ client.on("message", message => {
   if (message.attachments.find(attachments => inspectImage(attachments.url, message)));
 });
 
-function validateMessage(message) {
+const validateMessage = message => {
   if (message.channel.name !== "welcome") return;
 
   if (
@@ -91,7 +93,7 @@ function validateMessage(message) {
     .catch(console.error);
 }
 
-async function displayHelp(message) {
+const displayHelp = async message => {
   const embedMessage = new Discord.RichEmbed();
 
   await embedMessage
@@ -108,8 +110,8 @@ async function displayHelp(message) {
   await message.channel.send(embedMessage);
 }
 
-const setTimer = () => {
-
+const setTimer = message => {
+  message.channel.send("Sorry, this function is still under construction!");
 }
 
 const inspectImage = async (url, message) => {
@@ -269,7 +271,17 @@ const playRadio = async message => {
 }
 
 const stopRadio = message => {
-  message.member.voiceChannel.leave()
+  message.member.voiceChannel.leave();
+}
+
+const concentrate = message => {
+  if (!message.member.voiceChannel) {
+    message.channel.send("Join some voice channel first!");
+    return;
+  }
+
+  const channel = message.guild.channels.find(channel => channel.name === "study");
+  message.member.setVoiceChannel(channel);
 }
 
 client.login(process.env.BOT_TOKEN);
