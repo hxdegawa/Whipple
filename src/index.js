@@ -48,12 +48,17 @@ client.on("guildMemberAdd", member => {
 client.on("message", message => {
   const firstQuote = message.content.trim().split(/ |　/)[0];
 
+  if (message.author.bot) return;
+
+  if (!message.guild) {
+    message.reply(`sorry, ${client.user.tag} is not available with direct message. Please contact to @orihorih#0013 if you find any problem.`);
+    return;
+  };
+
   if (message.member.roles.find(role => role.name === "Stranger")) {
     validateMessage(message);
     return;
-  }
-
-  if (message.author.bot) return;
+  };
 
   // COMMAND DETECTION
 
@@ -61,13 +66,18 @@ client.on("message", message => {
 
   if (firstQuote === ".timer") setTimer(message);
 
-  if (firstQuote === '.study') concentrate(message);
+  if (firstQuote === ".study") concentrate(message);
 
-  if (firstQuote === ".play")  playRadio(message);
+  if (firstQuote === ".radio") playRadio(message);
 
   if (firstQuote === ".stop")  stopRadio(message);
 
-  if (message.attachments.find(attachments => inspectImage(attachments.url, message)));
+  if (message.attachments.find(attachment => inspectImage(attachment.url, message)));
+
+  setTimeout(() => {
+    if (message.embeds) {
+      message.embeds.find(result => inspectImage(result.message.embeds[0].thumbnail.url, message))};
+  }, 1500);
 });
 
 const validateMessage = message => {
@@ -83,7 +93,7 @@ const validateMessage = message => {
   }
 
   const memberRole = message.guild.roles.find(role => role.name === "Member"),
-    noobRole = message.guild.roles.find(role => role.name === "Stranger");
+        noobRole   = message.guild.roles.find(role => role.name === "Stranger");
 
   message.member
     .addRole(memberRole)
@@ -123,10 +133,17 @@ const inspectImage = async (url, message) => {
   .then(async response => {
     if (response.outputs[0].data.concepts[0].name === "nsfw") {
       const suspendedImage = new Discord.Attachment(url, "SPOILER_nsfw.png");
-      await message.channel.send("よくない画像っぽい気配を感じたので隠します！", suspendedImage);
+      const embedMessage   = new Discord.RichEmbed();
+
+      await embedMessage
+      .setAuthor(message.author.username, message.author.avatarURL)
+      .addField('🚨Suspicious message🚨', message.content ? message.content : url)
+      .attachFile(suspendedImage)
+      .setColor(0xEA2027);
+
+      await message.channel.send(embedMessage);
       await message.delete();
-    }
-    console.log(response.outputs[0].data);
+    };
   })
   .catch(console.error);
 }
@@ -197,7 +214,7 @@ const calcToken = (keyLength, keyOffset) => {
 const playAudio = (token, connection, station) => {
 
   const m3u8Options = {
-    uri: `https://radiko.jp/v2/api/ts/playlist.m3u8?station_id=${station}&l=15&ft=${format(subMinutes(new Date() , 2), 'YYYYMMDDHHmm00')}&to=${format(subMinutes(new Date(), 1), 'YYYYMMDDHHmm00')}`,
+    uri: `https://radiko.jp/v2/api/ts/playlist.m3u8?station_id=${station}&l=15&ft=${format(subMinutes(new Date(), 2), 'YYYYMMDDHHmm00')}&to=${format(subMinutes(new Date(), 1), 'YYYYMMDDHHmm00')}`,
     transform: body => {
       return body
     },
@@ -285,3 +302,4 @@ const concentrate = message => {
 }
 
 client.login(process.env.BOT_TOKEN);
+client.on('error', console.error);
