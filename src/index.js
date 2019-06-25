@@ -76,7 +76,16 @@ client.on("message", message => {
 
   setTimeout(() => {
     if (message.embeds) {
-      message.embeds.find(result => inspectImage(result.message.embeds[0].thumbnail.url, message))};
+      if (message.embeds.find(result => result.message.embeds[0].thumbnail)) {
+        message.embeds.find(result => inspectImage(result.message.embeds[0].thumbnail.url, message));
+        return;
+      };
+
+      if(message.embeds.find(result => result.message.embeds[0].image.url)) {
+        message.embeds.find(result => inspectImage(result.message.embeds[0].image.url, message));
+        return;
+      };
+    };
   }, 1500);
 });
 
